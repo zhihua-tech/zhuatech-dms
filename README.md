@@ -80,3 +80,7 @@ Office 在线预览、全文检索、OCR、CAD 图纸、动态水印、国密电
 ## 文档外发风险门禁
 
 新增 `POST /api/dms/insights/external-share-risk`，根据文档密级、外部收件人数、外链期限、水印、口令、下载权限和个人信息计算风险分，输出 `ALLOW / REVIEW / BLOCK`。高风险外发会被阻止，并提示最小化、缩短有效期和增强访问控制。
+
+## 企业级受控文档发布
+
+新增 `POST /api/enterprise/dms/controlled-document-release`，校验保留规则、文件完整性、病毒扫描、法律保全、最终审批和不可篡改审计，确保只有完整受控的版本可以生效。详见 [受控发布说明](docs/ENTERPRISE_CONTROLLED_RELEASE.md)。

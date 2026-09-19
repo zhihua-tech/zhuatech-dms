@@ -9,8 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+ */
 @Service
 public class ExternalShareRiskService {
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public Result evaluate(Request request) {
         int score = switch (request.classification()) {
             case "RESTRICTED" -> 50;
@@ -37,12 +43,18 @@ public class ExternalShareRiskService {
             !"BLOCK".equals(decision), actions);
     }
 
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public record Request(@NotBlank String documentCode,
                           @Pattern(regexp = "PUBLIC|INTERNAL|CONFIDENTIAL|RESTRICTED") String classification,
                           @Min(1) int externalRecipients, @Min(1) int expiryHours,
                           boolean watermarkEnabled, boolean passwordProtected,
                           boolean downloadAllowed, boolean personalData) {}
 
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public record Result(String documentCode, int riskScore, String decision,
                          boolean shareLinkAllowed, List<String> actions) {}
 }

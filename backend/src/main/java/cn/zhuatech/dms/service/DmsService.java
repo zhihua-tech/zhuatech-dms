@@ -1,14 +1,41 @@
 /* Copyright 2026 Shanghai Rujing Zhihua Information Technology Co., Ltd. · https://www.zhuatech.cn/ */
 package cn.zhuatech.dms.service;
 import cn.zhuatech.dms.common.BusinessException; import cn.zhuatech.dms.dto.DmsDto.*; import cn.zhuatech.dms.model.*; import cn.zhuatech.dms.repository.*; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.util.*;
+/**
+ * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+ */
 @Service @Transactional(readOnly=true) public class DmsService {
     private final DocumentRepository orders; private final VersionRecordRepository reports; private final StorageNodeRepository storageNode; private final ApprovalTaskRepository approvalTasks; private final CurrentUserService current;
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public DmsService(DocumentRepository orders,VersionRecordRepository reports,StorageNodeRepository storageNode,ApprovalTaskRepository approvalTasks,CurrentUserService current){this.orders=orders;this.reports=reports;this.storageNode=storageNode;this.approvalTasks=approvalTasks;this.current=current;}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public Dashboard shopfloorDashboard(){String center=current.get().getLibraryCode();List<Document> list=center==null?orders.findAllByOrderByDueDateAsc():orders.findByLibraryCodeOrderByDueDateAsc(center);return dashboard(list);}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public Dashboard adminDashboard(){return dashboard(orders.findAllByOrderByDueDateAsc());}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public List<DocumentView> documents(){return orders.findAllByOrderByDueDateAsc().stream().map(this::view).toList();}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     @Transactional public ReportResult report(Long id,ReportRequest request){Document order=orders.findById(id).orElseThrow(()->new BusinessException("文档任务不存在"));if(order.getStatus()==Document.Status.COMPLETED)throw new BusinessException("已发布文档不能继续反馈");if(order.getCompletedQty()+request.goodQty()>order.getPlannedQty())throw new BusinessException("发布页数不能超过文档剩余页数");order.report(request.goodQty(),request.defectQty());reports.save(new VersionRecord(order,request.operationName(),request.goodQty(),request.defectQty(),current.get().getFullName(),request.remark()));return new ReportResult(order.getOrderNo(),order.getCompletedQty(),order.getDefectQty(),progress(order),order.getStatus().name());}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     private Dashboard dashboard(List<Document> list){int planned=list.stream().mapToInt(Document::getPlannedQty).sum(),done=list.stream().mapToInt(Document::getCompletedQty).sum(),defects=list.stream().mapToInt(Document::getDefectQty).sum();int rate=planned==0?0:Math.round(done*100f/planned);List<Metric> metrics=List.of(new Metric("受控文档",String.format("%,d",planned),list.size()+" 张文档任务","blue"),new Metric("发布完成率",rate+"%",String.format("%,d / %,d",done,planned),"green"),new Metric("审核通过率",String.format("%.1f%%",done+defects==0?100d:done*100d/(done+defects)),defects+" 页待修订","warn"),new Metric("存储异常",storageNode.countByStatus(StorageNode.Status.ALARM)+"",approvalTasks.countByResult(ApprovalTask.Result.PENDING)+" 项待审批","red"));return new Dashboard(metrics,list.stream().map(this::view).toList(),storageNode.findAllByOrderByCodeAsc().stream().map(e->new StorageNodeView(e.getCode(),e.getName(),e.getLibrary().getName(),e.getStatus().name(),e.getOee(),e.getLastHeartbeat())).toList(),approvalTasks.findTop10ByOrderByIdDesc().stream().map(i->new ApprovalTaskView(i.getApprovalTaskNo(),i.getDocument().getOrderNo(),i.getDocument().getProductName(),i.getApprovalTaskType(),i.getSampleQty(),i.getDefectQty(),i.getResult().name(),i.getInspector())).toList());}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     private DocumentView view(Document o){return new DocumentView(o.getId(),o.getOrderNo(),o.getProductCode(),o.getProductName(),o.getLibrary().getName(),o.getLibrary().getWorkshop(),o.getPlannedQty(),o.getCompletedQty(),o.getDefectQty(),o.getDueDate(),o.getStatus().name(),o.getBatchNo(),progress(o));}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     private int progress(Document o){return o.getPlannedQty()==0?0:Math.min(100,Math.round(o.getCompletedQty()*100f/o.getPlannedQty()));}
 }

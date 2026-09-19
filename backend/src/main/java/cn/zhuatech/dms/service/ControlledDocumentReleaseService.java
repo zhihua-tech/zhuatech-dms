@@ -6,8 +6,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+ */
 @Service
 public class ControlledDocumentReleaseService {
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public Assessment assess(Request request) {
         List<String> blockers = new ArrayList<>();
         if (request.legalHoldActive()) blockers.add("文档处于法律保全状态，禁止发布或覆盖");
@@ -23,12 +29,21 @@ public class ControlledDocumentReleaseService {
             blockers.isEmpty(), request.documentId() + "@" + request.version(), blockers, actions);
     }
 
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public record Request(@NotBlank String documentId, @NotBlank String version,
                           @NotBlank String retentionClass, boolean retentionAssigned,
                           boolean checksumVerified, boolean malwareScanPassed,
                           boolean legalHoldActive, boolean finalApprovalComplete,
                           boolean immutableAuditComplete) {}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public record Assessment(Decision decision, boolean releasable, String releaseKey,
                              List<String> blockers, List<String> actions) {}
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     public enum Decision { RELEASE, BLOCKED }
 }

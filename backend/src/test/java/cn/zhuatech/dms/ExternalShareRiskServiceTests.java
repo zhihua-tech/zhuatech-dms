@@ -8,9 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+ */
 class ExternalShareRiskServiceTests {
     private final ExternalShareRiskService service = new ExternalShareRiskService();
 
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     @Test
     void blocksRestrictedPersonalDataShare() {
         var result = service.evaluate(new ExternalShareRiskService.Request(
@@ -21,6 +27,9 @@ class ExternalShareRiskServiceTests {
         assertFalse(result.shareLinkAllowed());
     }
 
+    /**
+     * 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。
+     */
     @Test
     void allowsProtectedPublicDocumentShare() {
         var result = service.evaluate(new ExternalShareRiskService.Request(
